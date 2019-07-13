@@ -30,7 +30,11 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# 로그인 로그아웃 후 보여질 페이지 설정
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+LOGIN_URL = '/accounts/login'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -133,5 +137,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

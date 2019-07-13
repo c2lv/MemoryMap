@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import auth
-from .forms import LoginForm
 
 # Create your views here.
 
@@ -18,26 +17,27 @@ def signup(request):
             auth.login(request,user)
             return redirect('blogHome')
         else:
-            return render(request, 'signup.html', {'error' : 'Passwords must match'}
-            )
+            return render(request, 'accounts/signup.html', {'error' : 'Passwords must match'})
     else:
-        return render(request, 'signup.html')
+        return render(request, 'accounts/signup.html')
 
 
 def login(request):
-    if request.method == "POST":
-        # form에 정보를 넘겨 저장
-        form = LoginForm(request.POST)
+    if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        email = request.POST['email']
-        user = auth.authenticate(username=username, password=password)
-        # user가 none인 경우 인증 정보가 없다.
+        user = auth.authenticate(request, username=username, password=password)
         if user is not None:
-            auth.login(request, user) # user로 login 시도
+            auth.login(request, user)
             return redirect('home')
         else:
-            return HttpResponse("다시 시도")
+            return render(request, 'accounts/login.html', {'error': 'username or password is incorrect.'})
     else:
-        form = LoginForm()
-        return render(request, 'accounts/login.html', {'form':form})
+        return render(request, 'accounts/login.html')
+
+
+def logout(request):
+    if request.method == 'POST':
+        auth.logout(request)
+        return redirect('blogHome')
+    return render(request, 'accounts/signup.html')
