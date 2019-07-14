@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
+    'taggit',  # 태그관련 기능 https://django-taggit.readthedocs.io/en/latest/getting_started.html
 ]
 
 MIDDLEWARE = [
