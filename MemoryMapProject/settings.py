@@ -30,11 +30,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-# 로그인 로그아웃 후 보여질 페이지 설정
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login'
-LOGIN_URL = '/accounts/login'
 
+# 사용자 지정 유저 모델
+AUTH_USER_MODEL = 'accounts.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +44,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
     'taggit',  # 태그관련 기능 https://django-taggit.readthedocs.io/en/latest/getting_started.html
+    'django_countries', # CountryField 사용 https://pypi.org/project/django-countries/
 ]
 
 MIDDLEWARE = [
