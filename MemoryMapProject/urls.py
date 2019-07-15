@@ -25,7 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')), # 블로그 , 데이터
     path('accounts/', include('accounts.urls')), # 로그인, 로그아웃, 회원가입
-    path('homepage/', blog_view.blogHome, name="homepage"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

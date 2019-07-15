@@ -21,7 +21,13 @@
         <p>{{ blog.updated }}</p>
         <p>{{ blog.thumbnail }}</p>
         <!-- <p>{{ blog.category }}</p> -->
-        <p>{{ blog.comment }}</p>
+        {% for comment in blog.comments.all %}
+            <p>{{ comment.title }}</p>
+            <p>{{ comment.title }}</p>
+            <p>{{ comment.body }}</p>
+            <p>{{ comment.pub_date }}</p>
+            <p>{{ comment.updated }}</p>
+        {% endfor %}
 
     </div>
     {% endfor %}

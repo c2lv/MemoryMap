@@ -64,8 +64,20 @@ class Mapmodel(models.Model):
     # 색, 카테고리를 나타내는 태그
     # category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
     # category = models.CharField(choices=CATEGORY_CHOICE)
-    comment = models.CharField(max_length = 255)
 
     # like = models.ManyToManyField(User, blank=True)
 
     # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
+
+
+class Comment(models.Model):
+    # map Data가 삭제되면 함께 삭제되야함
+    target = models.ForeignKey(Mapmodel, on_delete=models.CASCADE, related_name='comments')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              on_delete=models.SET_DEFAULT,
+                              default="unknow|default 유저"
+                              )
+    pub_date = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=150)
+    body = models.TextField()
