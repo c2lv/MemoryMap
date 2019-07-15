@@ -9,5 +9,6 @@ def main(request):
 
 
 def blogHome(request):
-    return render(request, 'blogHome.html')
+    blogdata = Mapmodel.objects
+    return render(request, 'blogHome.html', {'blogdata':blogdata})
 

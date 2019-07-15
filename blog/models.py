@@ -5,7 +5,7 @@ from imagekit.processors import ResizeToFill
 from accounts.models import User
 
 class Category(models.Model):
-    DEFAULT = "대표 카테고리"
+    DEFAULT = "카테고리"
 
     CATEGORY_CHOICE = [
         ("FOOD", "음식"),
@@ -62,7 +62,8 @@ class Mapmodel(models.Model):
                               options={'quality':60})
 
     # 색, 카테고리를 나타내는 태그
-    category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
+    # category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
+    # category = models.CharField(choices=CATEGORY_CHOICE)
     comment = models.CharField(max_length = 255)
 
     # like = models.ManyToManyField(User, blank=True)

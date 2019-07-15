@@ -15,10 +15,10 @@ class User(AbstractUser):
         ('female', '여성'),
     )
 
-    nickname = models.CharField(max_length=255, blank=True)
-    gender = models.CharField(max_length=80, choices=GENDER_CHOICES)
-    age = models.SmallIntegerField()
+    nickname = models.CharField(max_length=255, null=True)
+    gender = models.CharField(max_length=80, null=True, choices=GENDER_CHOICES)
+    age = models.SmallIntegerField(null=True)
 
     country = CountryField()
-    address = models.CharField(max_length=300, blank=True)
+    address = models.CharField(max_length=300, null=True)
 

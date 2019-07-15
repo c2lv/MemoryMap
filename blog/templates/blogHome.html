@@ -11,4 +11,20 @@
 {#            {{ article.images }}#}
 {#        {% endfor %}#}
     </div>
+    
+    <div class="container">
+    {% for blog in blogdata.all %}
+    <div class="container">
+        <h1>{{ blog.title }}</h1>
+        <p>{{ blog.body }}</p>
+        <p>{{ blog.pub_date }}</p>
+        <p>{{ blog.updated }}</p>
+        <p>{{ blog.thumbnail }}</p>
+        <!-- <p>{{ blog.category }}</p> -->
+        <p>{{ blog.comment }}</p>
+
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
+
