@@ -79,5 +79,6 @@ class Comment(models.Model):
                               )
     pub_date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    approved = models.BooleanField(default=False)
     title = models.CharField(max_length=150)
     body = models.TextField()
