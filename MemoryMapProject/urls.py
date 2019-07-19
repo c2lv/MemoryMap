@@ -15,16 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import accounts
 from blog import views as blog_view
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', blog_view.main, name='main'),
     path('admin/', admin.site.urls),
+    path('', blog_view.main, name='main'),
     path('blog/', include('blog.urls')), # 블로그 , 데이터
-    path('accounts/', include('accounts.urls')), # 로그인, 로그아웃, 회원가입
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

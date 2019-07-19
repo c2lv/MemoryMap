@@ -25,14 +25,26 @@ SECRET_KEY = '*p3+zw1n-&5@*5&glk^lv4^l4z*5m%r#ms5+-y(m++t1-)wh8j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 
-# 사용자 지정 유저 모델
-AUTH_USER_MODEL = 'accounts.User'
+# # 사용자 지정 유저 모델
+# AUTH_USER_MODEL = 'accounts.User'
+
+# allauth 세팅
+SITE_ID = 1
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# allauth가 django의 인증체계를 사용할 수 있도록 설정
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend", # 기본인증
+    "allauth.account.auth_backends.AuthenticationBackend", # 추가적인 인증
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,10 +53,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
+
     'blog.apps.BlogConfig',
     'taggit',  # 태그관련 기능 https://django-taggit.readthedocs.io/en/latest/getting_started.html
     'django_countries', # CountryField 사용 https://pypi.org/project/django-countries/
+]
+
+INSTALLED_APPS += [
+    'django.contrib.sites',
+
+    # 공식 레퍼런스 https://django-allauth.readthedocs.io/en/latest/views.html
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # 원하는 provider를 enable https://github.com/YeongBaeeee/practice/wiki/26-OAuth-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%EA%B3%BC-%EB%8F%99%EC%8B%9C%EC%97%90-%EB%A1%9C%EA%B7%B8%EC%9D%B8
+    # 'allauth.socialaccount.providers.facebook', 
+    # 'allauth.socialaccount.providers.kakao', 
+    # 'allauth.socialaccount.providers.naver', 
+    'allauth.socialaccount.providers.github', 
 ]
 
 MIDDLEWARE = [
@@ -71,6 +98,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                # for allauth
+                'django.template.context_processors.request', 
             ],
         },
     },
