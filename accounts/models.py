@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django_countries.fields import CountryField
+
 """
 유저정보
 -id
@@ -18,6 +19,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=255, null=True)
     gender = models.CharField(max_length=80, null=True, choices=GENDER_CHOICES)
     age = models.SmallIntegerField(null=True)
+    # birth = models.
 
     country = CountryField()
     address = models.CharField(max_length=300, null=True)

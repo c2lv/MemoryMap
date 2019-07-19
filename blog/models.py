@@ -22,16 +22,16 @@ class Category(models.Model):
     )
 
 
-def user_path(instance, filename): #파라미터 instance는 Photo 모델을 의미 filename은 업로드 된 파일의 파일 이름
+def user_path(instance, filename):  # 파라미터 instance는 Photo 모델을 의미 filename은 업로드 된 파일의 파일 이름
     from random import choice
-    from string import ascii_letters# string.ascii_letters : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+    from string import ascii_letters  # string.ascii_letters : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
     arr = [choice(ascii_letters) for _ in range(8)]
 
-    pid = ''.join(arr) # 8자리 임의의 문자를 만들어 파일명으로 지정
-    extension = filename.split('.')[-1] # 배열로 만들어 마지막 요소를 추출하여 파일확장자로 지정
+    pid = ''.join(arr)  # 8자리 임의의 문자를 만들어 파일명으로 지정
+    extension = filename.split('.')[-1]  # 배열로 만들어 마지막 요소를 추출하여 파일확장자로 지정
 
     # file will be uploaded to MEDIA_ROOT/user_<id>/<random>
-    return '%s/%s.%s' % (instance.owner.username, pid, extension) # 예 : wayhome/abcdefgs.png
+    return '%s/%s.%s' % (instance.owner.username, pid, extension)  # 예 : wayhome/abcdefgs.png
 
 
 THUMBNAIL_WIDTH = 120
@@ -47,7 +47,8 @@ class Mapmodel(models.Model):
                               )
 
     title = models.CharField(max_length=200)  #제목
-    body = models.TextField() #내용 입력 창
+    body = models.TextField(default="") #내용 입력 창
+    address = models.CharField(max_length=200, default="장소를 지정해주세요.")
 
     # 레코드 생성시 현재 시간으로 자동 생성
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -55,7 +56,7 @@ class Mapmodel(models.Model):
     # pub_date = models.DateTimeField('date published') #시간
 
     #장소정보
-    image = models.ImageField(blank=True,upload_to=user_path)
+    image = models.ImageField(null=True,upload_to=user_path)
     thumbnail = ImageSpecField(source='image',
                               processors=[ResizeToFill(THUMBNAIL_WIDTH, THUMBNAIL_HIGHT)],
                               format="JPEG",
@@ -65,9 +66,12 @@ class Mapmodel(models.Model):
     # category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
     # category = models.CharField(choices=CATEGORY_CHOICE)
 
-    # like = models.ManyToManyField(User, blank=True)
+    like = models.ManyToManyField(User, related_name='likes')
 
     # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
+
+    class Meta:
+        ordering = ('pub_date',)
 
 
 class Comment(models.Model):
@@ -82,3 +86,6 @@ class Comment(models.Model):
     approved = models.BooleanField(default=False)
     title = models.CharField(max_length=150)
     body = models.TextField()
+
+    class Meta:
+        ordering = ('pub_date',)
