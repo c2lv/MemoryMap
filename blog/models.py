@@ -1,8 +1,11 @@
 from django.db import models
 from django.conf import settings
+from accounts.models import User
+from django.urls import reverse
+
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from accounts.models import User
+
 
 class Category(models.Model):
     DEFAULT = "카테고리"
@@ -42,21 +45,22 @@ class Mapmodel(models.Model):
 
     # 로그인 한 사용자, many to one relation
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
-                              on_delete=models.SET_DEFAULT,
-                              default="unknow|default 유저"
+                              on_delete=models.SET_NULL,
+                              null=True,
                               )
 
     title = models.CharField(max_length=200)  #제목
-    body = models.TextField(default="") #내용 입력 창
+    content = models.TextField()
+    
+    # 주소 정보
     address = models.CharField(max_length=200, default="장소를 지정해주세요.")
 
     # 레코드 생성시 현재 시간으로 자동 생성
     pub_date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # pub_date = models.DateTimeField('date published') #시간
 
-    #장소정보
-    image = models.ImageField(null=True,upload_to=user_path)
+    # image는 선택사항
+    image = models.ImageField(blank=True,null=True,upload_to=user_path)
     thumbnail = ImageSpecField(source='image',
                               processors=[ResizeToFill(THUMBNAIL_WIDTH, THUMBNAIL_HIGHT)],
                               format="JPEG",
@@ -66,26 +70,34 @@ class Mapmodel(models.Model):
     # category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
     # category = models.CharField(choices=CATEGORY_CHOICE)
 
-    like = models.ManyToManyField(User, related_name='likes')
+    # like = models.ManyToManyField(User, related_name='likes')
 
     # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
 
+    def get_absolute_url(self): # redirect시 활용
+        return reverse('blog:home', args=[self.id]) # args=[self.id])
+
     class Meta:
-        ordering = ('pub_date',)
+        ordering = ('-pub_date',)
 
 
-class Comment(models.Model):
+class Memo(models.Model):
     # map Data가 삭제되면 함께 삭제되야함
-    target = models.ForeignKey(Mapmodel, on_delete=models.CASCADE, related_name='comments')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
-                              on_delete=models.SET_DEFAULT,
-                              default="unknow|default 유저"
+    target = models.ForeignKey(
+                            Mapmodel, 
+                            on_delete=models.CASCADE, 
+                            related_name='memos')
+    owner = models.ForeignKey(
+                            settings.AUTH_USER_MODEL,
+                            on_delete=models.SET_NULL,
+                            null=True,
                               )
+    
     pub_date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
     approved = models.BooleanField(default=False)
-    title = models.CharField(max_length=150)
-    body = models.TextField()
+    memo = models.TextField()
 
     class Meta:
-        ordering = ('pub_date',)
+        ordering = ('-pub_date',)
