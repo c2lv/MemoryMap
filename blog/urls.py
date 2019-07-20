@@ -2,10 +2,14 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 app_name = 'blog'
 
 urlpatterns = [
     path('', views.blogHome, name="home"),
+    path('<username>/', views.myBlog, name="my_blog"),
     path('<username>/new_post/', views.new_post, name="new_post"),
     path('<username>/update_post/<int:id>', views.update_post, name="update_post"),
     path('<username>/delete_post/<int:id>', views.delete_post, name="delete_post"),

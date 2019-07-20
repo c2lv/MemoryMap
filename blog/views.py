@@ -16,6 +16,12 @@ def blogHome(request):
     return render(request, 'blogHome.html', {'posts':posts, 'form':form})
 
 
+def myBlog(request, username):
+    posts = Mapmodel.objects.filter(owner=request.user)
+    form = MemoForm()
+    return render(request, 'myBlog.html', {'posts':posts, 'form':form})
+
+
 def new_post(request, username):
     if request.method == "POST":
         form = MapForm(request.POST)
@@ -74,8 +80,16 @@ def delete_memo(request, username, id):
     memo.delete()
     return redirect("blog:home")
 
-
-
+#좋아요 기능
+# @property
+# def like(request):
+#     if request.method == 'POST':
+#         user  = request.user  #로그인한 유저 가져오기
+#         #post id와 오브젝트 가져오기 ㅇ거 뭐라고 써야하지
+#         blog = get_object_or_404(pk=id)
+#         blog.likes.add(user)
+#         Mapmodel_id= request.POST.get('pk', None)
+#         = Mapmodel.objects.get(pk=Mapmodel_id)
 
 
 

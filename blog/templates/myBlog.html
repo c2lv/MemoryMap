@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load crispy_forms_tags %}
-<h1>블로그 홈 페이지 입니다.</h1><hr>
+<h1>{{ user.username }}님의 Blog 페이지 입니다.</h1><hr>
 
 <div class="container">
     <div class="container">
@@ -37,6 +37,7 @@
                 <form action="{% url 'blog:new_memo' user.username post.id %}" method="POST">
                     {% csrf_token %}
                     {% crispy form %}
+                    <button type="submit" class="btn btn-primary">Submit</button> 
                 </form>
                 {% for memo in post.memos.all %}
                     <p>메모 : {{ memo.memo }}</p>

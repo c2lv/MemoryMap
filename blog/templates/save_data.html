@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load crispy_forms_tags %}
     <div class="blog">
         {% if form.errors %}
             {{ form.error }}
@@ -13,7 +14,8 @@
         {% endif %}
             {% csrf_token %}
             <table>
-                {{ form.as_table }}
+                {% crispy form %}
+                <!-- {{ form.as_table }} -->
             </table>
             <button type="submit">Submit</button>
         </form> 

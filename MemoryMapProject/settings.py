@@ -46,6 +46,8 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend", # 추가적인 인증
 )
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,8 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'crispy_forms',     # form에 bootstrap 적용
+
     'blog.apps.BlogConfig',
-    'taggit',  # 태그관련 기능 https://django-taggit.readthedocs.io/en/latest/getting_started.html
+    'taggit',           # 태그관련 기능 https://django-taggit.readthedocs.io/en/latest/getting_started.html
     'django_countries', # CountryField 사용 https://pypi.org/project/django-countries/
 ]
 

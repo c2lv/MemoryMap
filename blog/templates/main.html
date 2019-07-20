@@ -12,8 +12,9 @@
     <a href="/accounts/signup">회원가입</a>
     {% endif %}
 
+    <!-- <a href="{% url 'blog:home' %}"></a> -->
+    
     {% for account in user.socialaccount_set.all %}
- 
         {% comment %} show avatar from url {% endcomment %}
         <h2 style="text-transform:capitalize;">{{ account.provider }} account data</h2>
     
@@ -30,4 +31,5 @@
         {% empty %}
         <p>you haven't any social account please</p>
     {% endfor %}
+    
 {% endblock %}

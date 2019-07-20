@@ -28,7 +28,6 @@ def user_path(instance, filename):  # 파라미터 instance는 Photo 모델을 �
     from random import choice
     from string import ascii_letters  # string.ascii_letters : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
     arr = [choice(ascii_letters) for _ in range(8)]
-
     pid = ''.join(arr)  # 8자리 임의의 문자를 만들어 파일명으로 지정
     extension = filename.split('.')[-1]  # 배열로 만들어 마지막 요소를 추출하여 파일확장자로 지정
 
@@ -65,16 +64,22 @@ class Mapmodel(models.Model):
                               format="JPEG",
                               options={'quality':60})
 
-    # 색, 카테고리를 나타내는 태그
-    # category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default="없음")
-    # category = models.CharField(choices=CATEGORY_CHOICE)
-
-    # like = models.ManyToManyField(User, related_name='likes')
+    
+    # 
+    # likes = models.ManyToManyField(settings.AUTH_USER_MODEL, null=True, related_name='likes')
+    #     #좋아요 숫자 세는 기능
+    # def total_likes(self):
+    #     return self.likes.count()
 
     # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
-
-    def get_absolute_url(self): # redirect시 활용
-        return reverse('blog:home', args=[self.id]) # args=[self.id])
+        
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            temp_image = self.image
+            self.image = None
+            super().save(*args, **kwargs)
+            self.image = temp_image
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('-pub_date',)
