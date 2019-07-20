@@ -5,6 +5,8 @@ from .forms import *
 
 from django.http import HttpResponse
 
+from utils.decorators import login_required
+
 # Create your views here.
 def main(request):
     return render(request, 'main.html')
@@ -81,17 +83,27 @@ def delete_memo(request, username, id):
     return redirect("blog:home")
 
 #좋아요 기능
-# @property
-# def like(request):
-#     if request.method == 'POST':
-#         user  = request.user  #로그인한 유저 가져오기
-#         #post id와 오브젝트 가져오기 ㅇ거 뭐라고 써야하지
-#         blog = get_object_or_404(pk=id)
-#         blog.likes.add(user)
-#         Mapmodel_id= request.POST.get('pk', None)
-#         = Mapmodel.objects.get(pk=Mapmodel_id)
+@login_required
+def like_toggle(request, writer, id):
+    # GET파라미터로 전달된 이동할 URL
+    next_path = request.GET.get('next')
+    # post_pk에 해당하는 Post객체
+    post = get_object_or_404(Mapmodel, pk=id)
+    # 요청한 사용자
+    user = request.user
 
+    target = user.likes.filter(pk=post.id)
+    
+    # 이미 likes에 존재할 시 삭제, 없을 시 추가
+    if target.exists():
+        user.likes.remove(post)
+    else:
+        user.likes.add(post)
 
+    # next 기능을 사용할 시 활성화
+    # if next_path:
+    #     return redirect(next_path)
+    return redirect('blog:home')
 
 # def save_data(request, id):
 #     data, created = Mapmodel.objects.get_or_create(pk=id)

@@ -64,22 +64,21 @@ class Mapmodel(models.Model):
                               format="JPEG",
                               options={'quality':60})
 
-    
-    # 
-    # likes = models.ManyToManyField(settings.AUTH_USER_MODEL, null=True, related_name='likes')
-    #     #좋아요 숫자 세는 기능
-    # def total_likes(self):
-    #     return self.likes.count()
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, null=True, related_name='likes')
+
+    @property
+    def totla_like(self):
+        return self.likes.count()
 
     # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
         
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            temp_image = self.image
-            self.image = None
-            super().save(*args, **kwargs)
-            self.image = temp_image
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.id is None:
+    #         temp_image = self.image
+    #         self.image = None
+    #         super().save(*args, **kwargs)
+    #         self.image = temp_image
+    #     super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('-pub_date',)

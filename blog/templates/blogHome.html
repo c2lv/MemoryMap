@@ -24,27 +24,61 @@
             <a href="{% url 'blog:delete_post' user.username post.id %}">포스트 삭제</a>
             <a href="{% url 'blog:update_post' user.username post.id %}">포스트 수정</a>
             {% endif %}
-
+            
             {% if post.image %}
                 <p>이미지 : </p>
                 <img src="{{post.image.url}}" width = 500>
                 <p>썸네일 : </p>    
                 <img src = "{{post.thumbnail.url}}">
             {% endif %}
+            
+            <!-- 좋아요 버튼 -->
+            <form action="{% url 'blog:post_like_toggle' post.owner.username post.id %}" method="POST" class="form-inline">
+                {% csrf_token %}
+                <button class="btn btn-default">
+                    {% if post in user.likes.all %}
+                        <i class="fas fa-heart"></i>
+                    {% else %}
+                        <i class="far fa-heart"></i>
+                    {% endif %}
+                </button>
+            </form>
+
+            {% with like_count=post.likes.count %}
+                {% if like_count %}
+                <p class="like-count">
+                    {% if like_count < 10 %}
+                        <b>
+                        {% for user in post.likes.all %}
+                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        </b>
+                        님이 좋아합니다
+                    {% else %}
+                        <b>좋아요 {{ user.like_posts.count }}개</b>
+                    {% endif %}
+                </p>
+                {% endif %}
+            {% endwith %}
 
             <hr>
             <div class="memo">
+                {% if user.is_authenticated %}
                 <form action="{% url 'blog:new_memo' user.username post.id %}" method="POST">
                     {% csrf_token %}
                     {% crispy form %}
                 </form>
-                {% for memo in post.memos.all %}
-                    <p>메모 : {{ memo.memo }}</p>
-                    <p>생성일 : {{ memo.pub_date }}</p>
-                    <p>업데이트 : {{ memo.updated }}</p>
-                    <a href="{% url 'blog:delete_memo' user.username memo.id%}">메모 삭제</a>
-                    <a href="{% url 'blog:update_memo' user.username memo.id%}">메모 삭제</a>
-                {% endfor %}
+                {% endif %}
+
+                {% if post.memos.exists %}
+                    {% for memo in post.memos.all %}
+                        <p>메모 : {{ memo.memo }}</p>
+                        <p>생성일 : {{ memo.pub_date }}</p>
+                        <p>업데이트 : {{ memo.updated }}</p>
+                        <a href="{% url 'blog:delete_memo' user.username memo.id%}">메모 삭제</a>
+                        <a href="{% url 'blog:update_memo' user.username memo.id%}">메모 삭제</a>
+                    {% endfor %}
+                {% endif %}
             </div>
             <hr>
         {% endfor %}
