@@ -10,7 +10,7 @@ app_name = 'blog'
 urlpatterns = [
     path('', views.blogHome, name="home"),
     # blog post
-    path('<username>/', views.myBlog, name="my_blog"),
+    path('myblog/', views.myBlog, name="my_blog"),
     path('<username>/new_post/', views.new_post, name="new_post"),
     path('<username>/update_post/<int:id>', views.update_post, name="update_post"),
     path('<username>/delete_post/<int:id>', views.delete_post, name="delete_post"),
@@ -22,5 +22,5 @@ urlpatterns = [
     path('<username>/update_memo/<int:id>', views.update_memo, name="update_memo"),
     path('<username>/delete_memo/<int:id>', views.delete_memo, name="delete_memo"),
     
-    
+    path('search/', views.search, name="search")
 ]

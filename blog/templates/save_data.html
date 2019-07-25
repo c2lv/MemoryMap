@@ -13,11 +13,8 @@
         <form action="{% url 'blog:new_post' user.get_username %}" method="POST">
         {% endif %}
             {% csrf_token %}
-            <table>
-                {% crispy form %}
-                <!-- {{ form.as_table }} -->
-            </table>
-            <button type="submit">Submit</button>
+            {% crispy form %}
+            <!-- {{ form.as_table }} -->
         </form> 
         {% endif %}
     </div>

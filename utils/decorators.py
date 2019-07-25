@@ -18,11 +18,15 @@ def login_required(view_func):
                 user = getattr(request, 'user')
                 if user and user.is_authenticated:
                     return view_func(*args, **kwargs)
+                
                 # 인증되지 않았을 경우, HTTP_REFERER의 path를 가져온다
                 path = urlparse(request.META['HTTP_REFERER']).path
+
                 # 로그인 뷰로 이동하며 GET파라미터의 next값을 path로 지정해주는
                 # redirect_to_login함수를 되돌려준다
+                print(path)
                 return redirect_to_login(path)
+        print("nomal")
         # 위에 해당하지 않는 경우, Django에서 제공하는 기본 login_required를 데코레이터로 사용한다
         return django_login_required(view_func)(*args, **kwargs)
     return decorator

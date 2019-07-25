@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 from utils.decorators import login_required
 
+
 # Create your views here.
 def main(request):
     return render(request, 'main.html')
@@ -18,35 +19,51 @@ def blogHome(request):
     return render(request, 'blogHome.html', {'posts':posts, 'form':form})
 
 
-def myBlog(request, username):
+@login_required
+def myBlog(request):
     posts = Mapmodel.objects.filter(owner=request.user)
     form = MemoForm()
     return render(request, 'myBlog.html', {'posts':posts, 'form':form})
 
 
+@login_required
 def new_post(request, username):
     if request.method == "POST":
         form = MapForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
+            tags = form.cleaned_data['tags']
             post = form.save(commit=False)
             post.owner = request.user
             post.save()
+
+            for tag in tags:
+               post.tags.add(tag)
+               
             return redirect("blog:home")
     else:
         form = MapForm()
     return render(request, 'save_data.html', {'form':form})
 
 
+
 def update_post(request, username, id):
     post = get_object_or_404(Mapmodel, pk=id)
+    # 글의 주인이 아닐 때
+    if post.owner != request.user:
+        return redirect('blog:home')
     form = MapForm(request.POST, instance=post)
     if request.method == "POST":
         form = MapForm(request.POST, instance=post)
         if form.is_valid():
             print(form.cleaned_data)
+            tags = form.cleaned_data['tags']
             post = form.save(commit=False)
             post.save()
+
+            for tag in tags:
+               post.tags.add(tag)
+            
             return redirect('blog:home')
     else:
         form = MapForm(instance=post)
@@ -54,9 +71,11 @@ def update_post(request, username, id):
 
 
 def delete_post(request, username, id):
-    post = get_object_or_404(Mapmodel, pk=id)
-    post.delete()
-    return redirect("blog:home")
+    if request.method == "POST":
+        print("삭제합니다.")
+        post = get_object_or_404(Mapmodel, pk=id)
+        post.delete()
+        return redirect("blog:home")
 
 
 def new_memo(request, username, id):
@@ -73,14 +92,20 @@ def new_memo(request, username, id):
 
 
 def update_memo(request, username, id):
-    memo = get_object_or_404(Memo, pk=id)
-    form = MapForm(request.POST, instance=memo)
-    return render(request, 'save_data.html', {'form':form})
+    if request.method == "POST":        
+        memo = get_object_or_404(Memo, pk=id)
+        if memo.owner == request.user:
+            form = MapForm(request.POST, instance=memo)
+            return render(request, 'save_data.html', {'form':form})
+
 
 def delete_memo(request, username, id):
-    memo = get_object_or_404(Memo, pk=id)
-    memo.delete()
-    return redirect("blog:home")
+    if request.method == "POST":
+        memo = get_object_or_404(Memo, pk=id)
+        if memo.owner == request.user:
+            memo.delete()
+        return redirect("blog:home")
+
 
 #좋아요 기능
 @login_required
@@ -105,15 +130,9 @@ def like_toggle(request, writer, id):
     #     return redirect(next_path)
     return redirect('blog:home')
 
-# def save_data(request, id):
-#     data, created = Mapmodel.objects.get_or_create(pk=id)
-#     form = MapForm(request.POST, instance=data)
 
-#     # 데이터가 이미 존재 할 때 Update
-#     if form.is_valid():
-#         form.save()
-#         return redirect(data.get_absolute_url())
-#     # 데이터가 존재하지 않을 때 Create
-#     else:
-#         return render('save_data.html', {'form':form})
-
+def search(request):
+    tag = request.GET['q']
+    result = Mapmodel.objects.filter(tags__name__in=[tag])
+    # return HttpResponse(tag)
+    return render(request, "search.html")

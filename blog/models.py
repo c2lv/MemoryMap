@@ -5,6 +5,7 @@ from django.urls import reverse
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
+from taggit.managers import TaggableManager
 
 class Category(models.Model):
     DEFAULT = "카테고리"
@@ -64,21 +65,22 @@ class Mapmodel(models.Model):
                               format="JPEG",
                               options={'quality':60})
 
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, null=True, related_name='likes')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likes')
+
+    tags = TaggableManager(blank=True)
 
     @property
     def totla_like(self):
         return self.likes.count()
 
-    # photo = models.ImageField(blank=True, upload_to="blog/%Y/%m/%d")
-        
-    # def save(self, *args, **kwargs):
-    #     if self.id is None:
-    #         temp_image = self.image
-    #         self.image = None
-    #         super().save(*args, **kwargs)
-    #         self.image = temp_image
-    #     super().save(*args, **kwargs)
+
+    def get_update_url(self):
+          return reverse('blog:update_post', kwargs={'id': self.id, 'username': self.owner.username })
+    
+    
+    def get_delete_url(self):
+          return reverse('blog:delete_post', kwargs={'id': self.id, 'username': self.owner.username })
+
 
     class Meta:
         ordering = ('-pub_date',)
