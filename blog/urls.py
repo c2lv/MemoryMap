@@ -22,5 +22,6 @@ urlpatterns = [
     path('<username>/update_memo/<int:id>', views.update_memo, name="update_memo"),
     path('<username>/delete_memo/<int:id>', views.delete_memo, name="delete_memo"),
     
-    path('search/', views.search, name="search")
+    path('search', views.search, name="search")
+    
 ]

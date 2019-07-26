@@ -1,5 +1,6 @@
 from django import template
 from django.urls import reverse
+from django.shortcuts import resolve_url 
 import re
 
 """
@@ -32,12 +33,12 @@ def add_link_to_tag(item):
     tag_string = []
     tags = item.tags.all()
 
-    str_start = "<form method='GET' action=\"{url}\">".format(url = reverse("blog:search"))
     for tag in tags:
-        # temp = '''<button type="button" value="{name}">{name}</button>'''.format(name=tag.name)) 
-        # temp = '''<a href="{url}">{name}</a>'''.format(name=tag.name, url = reverse("blog:search", kwargs={'tag':tag.name}))
-        temp = '''<a href="{url}">{name}</a>'''.format(name=tag.name, url = reverse("blog:search"))
+        # url = "/blog/search"
+        url = resolve_url("blog:search")
+        # url = url[:len(url)-1]
+        # temp = '''<form method="GET" action="{url}"><input type="submit" name="search" value="{name}"></form>'''.format(name=tag.name, url=url)
+        temp = '''<a href="{url}?target={name}">{name}</a>'''.format(name=tag.name, url=url)
         tag_string.append(temp)
-    str_end = "</form>"
 
-    return str_start + ", ".join(tag_string) + str_end
+    return ", ".join(tag_string) 

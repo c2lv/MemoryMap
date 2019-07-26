@@ -14,7 +14,7 @@ def main(request):
 
 
 def blogHome(request):
-    posts = Mapmodel.objects
+    posts = Mapmodel.objects.all()
     form = MemoForm()
     return render(request, 'blogHome.html', {'posts':posts, 'form':form})
 
@@ -132,7 +132,8 @@ def like_toggle(request, writer, id):
 
 
 def search(request):
-    tag = request.GET['q']
-    result = Mapmodel.objects.filter(tags__name__in=[tag])
-    # return HttpResponse(tag)
-    return render(request, "search.html")
+    # tag = request.POST['q']
+    tag = request.GET['target']
+    posts = Mapmodel.objects.filter(tags__name__in=[tag])
+    form = MemoForm()
+    return render(request, "search.html", {"posts":posts, "form":form})

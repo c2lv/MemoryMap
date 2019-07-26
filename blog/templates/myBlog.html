@@ -5,7 +5,4 @@
 {% endblock %}
 
 <!-- 제목으로 표시될 헤드라인 -->
-{% block headline %}
-<h1>{{ user.username }}님의 블로그입니다.</h1>
-<hr>
-{% endblock %}
+{% block headline %}{{ user.username }}님의 블로그입니다.{% endblock %}

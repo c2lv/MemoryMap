@@ -24,6 +24,7 @@ urlpatterns = [
     path('', blog_view.main, name='main'),
     path('blog/', include('blog.urls')), # 블로그 , 데이터
     path('accounts/', include('allauth.urls')),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
