@@ -8,9 +8,9 @@
         
         <!-- 수정할 대상인 post의 존재 여부로 update, new 구분 -->
         {% if post %} 
-        <form action="{% url 'blog:update_post' user.get_username post.id %}" method="POST">
+        <form action="{% url 'blog:update_post' post.id %}" method="POST">
         {% else %}
-        <form action="{% url 'blog:new_post' user.get_username %}" method="POST">
+        <form action="{% url 'blog:new_post' %}" method="POST">
         {% endif %}
             {% csrf_token %}
             {% crispy form %}

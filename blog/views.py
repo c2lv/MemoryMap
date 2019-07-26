@@ -27,9 +27,10 @@ def myBlog(request):
 
 
 @login_required
-def new_post(request, username):
+def new_post(request):
     if request.method == "POST":
         form = MapForm(request.POST)
+        print(request.POST.get('image'))
         if form.is_valid():
             print(form.cleaned_data)
             tags = form.cleaned_data['tags']
@@ -46,12 +47,8 @@ def new_post(request, username):
     return render(request, 'save_data.html', {'form':form})
 
 
-
-def update_post(request, username, id):
+def update_post(request, id):
     post = get_object_or_404(Mapmodel, pk=id)
-    # 글의 주인이 아닐 때
-    if post.owner != request.user:
-        return redirect('blog:home')
     form = MapForm(request.POST, instance=post)
     if request.method == "POST":
         form = MapForm(request.POST, instance=post)
@@ -70,7 +67,7 @@ def update_post(request, username, id):
     return render(request, 'save_data.html', {'form':form, 'post':post})
 
 
-def delete_post(request, username, id):
+def delete_post(request, id):
     if request.method == "POST":
         print("삭제합니다.")
         post = get_object_or_404(Mapmodel, pk=id)
@@ -78,7 +75,7 @@ def delete_post(request, username, id):
         return redirect("blog:home")
 
 
-def new_memo(request, username, id):
+def new_memo(request, id):
     post = get_object_or_404(Mapmodel, pk=id)
     if request.method == "POST":
         form = MemoForm(request.POST)
@@ -91,19 +88,17 @@ def new_memo(request, username, id):
         return redirect("blog:home")
 
 
-def update_memo(request, username, id):
+def update_memo(request, id):
     if request.method == "POST":        
         memo = get_object_or_404(Memo, pk=id)
-        if memo.owner == request.user:
-            form = MapForm(request.POST, instance=memo)
-            return render(request, 'save_data.html', {'form':form})
+        form = MapForm(request.POST, instance=memo)
+        return render(request, 'save_data.html', {'form':form})
 
 
-def delete_memo(request, username, id):
+def delete_memo(request, id):
     if request.method == "POST":
         memo = get_object_or_404(Memo, pk=id)
-        if memo.owner == request.user:
-            memo.delete()
+        memo.delete()
         return redirect("blog:home")
 
 

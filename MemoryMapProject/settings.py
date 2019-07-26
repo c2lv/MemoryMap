@@ -39,7 +39,7 @@ SITE_ID = 1
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'accounts/login/'
+LOGIN_URL = '/accounts/login/'
 
 # allauth가 django의 인증체계를 사용할 수 있도록 설정
 AUTHENTICATION_BACKENDS = (

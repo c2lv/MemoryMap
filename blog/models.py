@@ -7,6 +7,7 @@ from imagekit.processors import ResizeToFill
 
 from taggit.managers import TaggableManager
 
+
 class Category(models.Model):
     DEFAULT = "카테고리"
 
@@ -34,6 +35,7 @@ def user_path(instance, filename):  # 파라미터 instance는 Photo 모델을 �
 
     # file will be uploaded to MEDIA_ROOT/user_<id>/<random>
     return '%s/%s.%s' % (instance.owner.username, pid, extension)  # 예 : wayhome/abcdefgs.png
+    # return '%s/%Y/%m/%d/%s.%s' % (instance.owner.username, pid, extension)  # 예 : wayhome/abcdefgs.png
 
 
 THUMBNAIL_WIDTH = 120
@@ -59,7 +61,7 @@ class Mapmodel(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     # image는 선택사항
-    image = models.ImageField(blank=True,null=True,upload_to=user_path)
+    image = models.ImageField(blank=True, null=True, upload_to=user_path)
     thumbnail = ImageSpecField(source='image',
                               processors=[ResizeToFill(THUMBNAIL_WIDTH, THUMBNAIL_HIGHT)],
                               format="JPEG",
@@ -72,15 +74,7 @@ class Mapmodel(models.Model):
     @property
     def totla_like(self):
         return self.likes.count()
-
-
-    def get_update_url(self):
-          return reverse('blog:update_post', kwargs={'id': self.id, 'username': self.owner.username })
-    
-    
-    def get_delete_url(self):
-          return reverse('blog:delete_post', kwargs={'id': self.id, 'username': self.owner.username })
-
+        
 
     class Meta:
         ordering = ('-pub_date',)

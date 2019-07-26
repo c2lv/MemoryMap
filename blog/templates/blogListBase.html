@@ -11,7 +11,7 @@
 <div class="container">
     <div class="container">
         {% if user.is_authenticated%}
-        <a href="{% url 'blog:new_post' user.get_username %}">새글쓰기</a>
+        <a href="{% url 'blog:new_post' %}">새글쓰기</a>
         {% else %}
         <p>로그인을 하시면 새 글을 쓰실 수 있습니다.</p>
         {% endif %}
@@ -33,14 +33,14 @@
 
                 <!-- 글을 쓴 사람만이 수정, 삭제할 수 있도록 -->
                 {% if user.username == post.owner.username %}
-                <!-- <a href="{% url 'blog:delete_post' user.username post.id %}">삭제</a> -->
-                <!-- <a href="{% url 'blog:update_post' user.username post.id %}">수정</a> -->
                 <div class="row">
-                    <form method="POST" action="{{ post.get_delete_url }}">
+                    <form method="POST" action="{% url 'blog:delete_post' post.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-secondary btn-sm">삭제</button>
                     </form>
-                    <button type="button" class="btn btn-outline-danger btn-sm"><a href="{{ post.get_update_url }}" style="all:unset">수정</a></button>
+                    <button type="button" class="btn btn-outline-danger btn-sm">
+                        <a href="{% url 'blog:update_post' post.id %}" style="all:unset">수정</a>
+                    </button>
                 </div>
                 {% endif %}
 
@@ -52,6 +52,7 @@
                 {% endif %}
 
                 <!-- 좋아요 버튼 -->
+                {% if user.is_authenticated %}
                 <form action="{% url 'blog:post_like_toggle' post.owner.username post.id %}" method="POST"
                     class="form-inline">
                     {% csrf_token %}
@@ -63,6 +64,7 @@
                         {% endif %}
                     </button>
                 </form>
+                {% endif %}
 
                 {% with like_count=post.likes.count %}
                 {% if like_count %}
@@ -84,7 +86,7 @@
                 <hr>
                 <div class="memo">
                     {% if user.is_authenticated %}
-                    <form action="{% url 'blog:new_memo' user.username post.id %}" method="POST">
+                    <form action="{% url 'blog:new_memo' post.id %}" method="POST">
                         {% csrf_token %}
                         {% crispy form %}
                     </form>
@@ -95,8 +97,8 @@
                             <p>메모 : {{ memo.memo }}</p>
                             <p>생성일 : {{ memo.pub_date }}</p>
                             <p>업데이트 : {{ memo.updated }}</p>
-                            <a href="{% url 'blog:delete_memo' user.username memo.id%}">삭제</a>
-                            <a href="{% url 'blog:update_memo' user.username memo.id%}">수정</a>
+                            <a href="{% url 'blog:delete_memo' memo.id%}">삭제</a>
+                            <a href="{% url 'blog:update_memo' memo.id%}">수정</a>
                         {% endfor %}
                     {% endif %}
                 </div>

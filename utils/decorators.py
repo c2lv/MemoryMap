@@ -26,7 +26,6 @@ def login_required(view_func):
                 # redirect_to_login함수를 되돌려준다
                 print(path)
                 return redirect_to_login(path)
-        print("nomal")
         # 위에 해당하지 않는 경우, Django에서 제공하는 기본 login_required를 데코레이터로 사용한다
         return django_login_required(view_func)(*args, **kwargs)
     return decorator

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-{% load socialaccount %} <!-- social account 기능을 사용 -->
 {% block content %}
+{% load socialaccount %} <!-- social account 기능을 사용 -->
+        
 
     <h1>메인 페이지 입니다.</h1>
     {% if user.is_authenticated %}
