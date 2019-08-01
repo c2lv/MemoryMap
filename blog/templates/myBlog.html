@@ -2,6 +2,17 @@
 <!-- 상단부에 표시될 이름 -->
 {% block title %}
 블로그 마이페이지
+<!-- kakao 지도 불러오기(key가 일정 조건에서만 작동하여 지도가 보이지 않을 수 있음) -->
+<div id="map" style="width:600px;height:450px;"></div>    
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=651f966bd6fbb70c517867d061de6a5a"></script>
+	<script>
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 3
+		};
+		var map = new kakao.maps.Map(container, options);
+
 {% endblock %}
 
 <!-- 제목으로 표시될 헤드라인 -->
